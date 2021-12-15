@@ -189,7 +189,7 @@ def update_charts(dropdown_value, mood_dropdown_value, n_clicks):
         fig = px.histogram(df, x=dropdown_value, title = 'Distribution of Selected Driver', color_discrete_sequence=['rgb(111,227,206)'])
         fig.update_layout(bargap=0.2)
 
-        return fig.show()
+        return fig
     else:
         return None
 
