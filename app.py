@@ -131,9 +131,7 @@ def build_mood_select():
 
 def build_plot():
 
-    fig = px.histogram(df, x = 'mood')
-
-    return dcc.Graph(id = 'plot_output', figure = fig)
+    return dcc.Graph(id = 'plot_output')
 
 
 app.layout = html.Div(
@@ -162,9 +160,11 @@ app.layout = html.Div(
             build_dropdown(),
             build_bannar2(),
             html.Div([build_mood_select(), build_button()]),
-            html.Div(id='dd-output-container'),
+            html.Div(build_plot()),
 
-            html.Div(build_plot())
+            
+                
+        
         ]
         )
 
@@ -178,9 +178,9 @@ dash.dependencies.Input('mood_dropdown', 'value'),
 dash.dependencies.Input('button', 'n_clicks')])
 
 def update_charts(dropdown_value, mood_dropdown_value, n_clicks):
-
     print(dropdown_value)
-    if not n_clicks:
+    print(n_clicks)
+    if n_clicks and dropdown_value != 'val':
         df = pd.read_csv('mood_drivers_app.csv', index_col=None)[['mood']+[dropdown_value]]
         #print(df)
         #df = df.groupby([dropdown_value])['count'].sum().reset_index()
@@ -190,9 +190,11 @@ def update_charts(dropdown_value, mood_dropdown_value, n_clicks):
         fig.update_layout(bargap=0.2)
 
         return fig.show()
+    else:
+        return None
+
+    #else:
+        #return None
     
-
-
-
 if __name__ == '__main__':
     app.run_server(debug=True)
