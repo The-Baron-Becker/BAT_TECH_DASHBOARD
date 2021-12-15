@@ -48,7 +48,6 @@ def build_bannar1():
     *** 1. ***please select your desired ***Mood Driver***.
          ''')
 
-
 def build_intro():
     return dcc.Markdown('''
     Welcome to the BAT Tech visualization app!
@@ -124,7 +123,7 @@ def build_mood_select():
             {'label': '3', 'value': '3'},
             {'label': '4', 'value': '4'},
             {'label': '5', 'value': '5'},
-            {'label': '5', 'value': '5'}
+            {'label': 'None', 'value': 'None'}
         ],
         value='val')
      ]
@@ -181,16 +180,16 @@ dash.dependencies.Input('button', 'n_clicks')])
 def update_charts(dropdown_value, mood_dropdown_value, n_clicks):
 
     print(dropdown_value)
-    if n_clicks is not None:
-
+    if not n_clicks:
         df = pd.read_csv('mood_drivers_app.csv', index_col=None)[['mood']+[dropdown_value]]
         #print(df)
         #df = df.groupby([dropdown_value])['count'].sum().reset_index()
-        df = df.groupby('mood').get_group(int(mood_dropdown_value))
+        if mood_dropdown_value != 'None':
+            df = df.groupby('mood').get_group(int(mood_dropdown_value))
         fig = px.histogram(df, x=dropdown_value, title = 'Distribution of Selected Driver', color_discrete_sequence=['rgb(111,227,206)'])
         fig.update_layout(bargap=0.2)
 
-        return html.Div(fig.show())
+        return fig.show()
     
 
 
